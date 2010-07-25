@@ -4,23 +4,42 @@
  * Load sizzle.js in Server Side environment.
  */
 
-var sizzle = loadSizzle;
+var fs = require("fs");
 
-exports = sizzle = loadSizzle;
 
-function loadSizzle(document) {
+var loadSizzle = exports.loadSizzle = function(document) {
 
-  if (!document) {
-    console.log("Warning: uable to load Sizzle. Sizzle requires a real DOM.");
-    return false;
+  var document = document || {},
+      window = {};
+
+  if ( !document.documentElement ) {
+    console.log("Warning: Sizzle requires a real DOM. You can build a decent server-side DOM with JSDOM." +
+        "Attempting to build Sizzle with a stubbed out DOM.");
+
+    var nullFunction = function(){};
+
+    // Stub out everything Sizzle needs from the DOM.
+    document = {
+      documentElement : {
+        compareDocumentPosition : nullFunction,
+        insertBefore : nullFunction,
+        removeChild : nullFunction
+      },
+      createComment : nullFunction,
+      createElement : function(){
+        return {
+          appendChild : nullFunction,
+          getElementsByTagName : function(){ return { length : null }; }
+        }
+      },
+      getElementById : nullFunction
+    }
   };
 
-  var window = {};
-  var src = fs.readFileSync(__dirname+"sizzle/sizzle.js", "utf8");
-  // Need to eval, not process.compile, since we want it to access local scope
-  // and pass sizzle both window and document.
+  var src = fs.readFileSync(__dirname+"/deps/sizzle/sizzle.js", "utf8");
+  // We need to eval Sizzle. process.compile is not sufficient, since we need
+  // access to local scope to provide Sizzle with the window and document objects.
   eval(src);
 
-  return window.sizzle;
-
+  return window.Sizzle;
 }

@@ -1,0 +1,1 @@
+Load Sizzle.js into Node.js while maintaining the integrity of the Sizzle codebase as an updatable submodule.
