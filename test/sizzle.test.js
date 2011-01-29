@@ -3,7 +3,8 @@
  */
 
 var assert = require("assert"),
-    sizzle = require("../node-sizzle");
+    Sizzle = require("../node-sizzle").Sizzle,
+    sizzle = new Sizzle();
 
 assert.ok(!!sizzle, "Sizzle module.");
-assert.ok(!!sizzle.loadSizzle(), "Sizzle loader.");
+assert.ok(!!sizzle.run(), "Sizzle loader.");

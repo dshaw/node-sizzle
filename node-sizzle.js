@@ -4,13 +4,16 @@
  * Load sizzle.js in Server Side environment.
  */
 
-var fs = require("fs");
+var fs = require("fs"),
+    vm = require("vm");
 
+var Sizzle = exports.Sizzle = function(){
+  this.script = vm.createScript(fs.readFileSync(__dirname+"/deps/sizzle/sizzle.js", "utf8"), 'sizzle.js');
+}
 
-var loadSizzle = exports.loadSizzle = function(document) {
+Sizzle.prototype.run = function(document){
 
-  var document = document || {},
-      window = {};
+  var document = document || {};
 
   if ( !document.documentElement ) {
     console.log("Warning: Sizzle requires a real DOM. You can build a decent server-side DOM with JSDOM." +
@@ -36,10 +39,8 @@ var loadSizzle = exports.loadSizzle = function(document) {
     }
   };
 
-  var src = fs.readFileSync(__dirname+"/deps/sizzle/sizzle.js", "utf8");
-  // We need to eval Sizzle. process.compile is not sufficient, since we need
-  // access to local scope to provide Sizzle with the window and document objects.
-  eval(src);
+  var sandbox = {window: {}, document: document};
+  this.script.runInNewContext(sandbox);
 
-  return window.Sizzle;
+  return sandbox.window.Sizzle;
 }
