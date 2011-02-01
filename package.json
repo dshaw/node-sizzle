@@ -1,0 +1,13 @@
+{
+  "name": "node-sizzle",
+  "description": "Load sizzle.js in Server Side environment.",
+  "keywords" : [ "sizzle" ],
+  "version": "0.2.0",
+  "author": "Daniel Shaw <daniel.shaw@dshaw.com> (http://dshaw.com/)",
+  "contributors": [
+      "Stanisław Wasiutyński (http://wasiutynski.net/)"
+  ],
+  "scripts": { "test": "node ./test/sizzle.test.js" },
+  "main": "./node-sizzle.js",
+  "engines": { "node": ">= 0.3.1" }
+}

@@ -9,14 +9,14 @@ var fs = require("fs"),
 
 var Sizzle = exports.Sizzle = function(){
   this.script = vm.createScript(fs.readFileSync(__dirname+"/deps/sizzle/sizzle.js", "utf8"), 'sizzle.js');
-}
+};
 
 Sizzle.prototype.run = function(document){
 
-  var document = document || {};
+  document = document || {};
 
   if ( !document.documentElement ) {
-    console.log("Warning: Sizzle requires a real DOM. You can build a decent server-side DOM with JSDOM." +
+    console.warn("Warning: Sizzle requires a real DOM. You can build a decent server-side DOM with JSDOM. " +
         "Attempting to build Sizzle with a stubbed out DOM.");
 
     var nullFunction = function(){};
@@ -37,10 +37,10 @@ Sizzle.prototype.run = function(document){
       },
       getElementById : nullFunction
     }
-  };
+  }
 
-  var sandbox = {window: {}, document: document};
+  var sandbox = { window: {}, document: document };
   this.script.runInNewContext(sandbox);
 
   return sandbox.window.Sizzle;
-}
+};
